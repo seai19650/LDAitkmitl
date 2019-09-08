@@ -2,7 +2,7 @@
 
 pip install pythainlp
 
-copy folder "pylexto" and "jpype" in your /anaconda3/lib/python3.7/site-packages
+You mustn't pip install pylexto, just COPY folder "pylexto" and "jpype" in your /anaconda3/lib/python3.7/site-packages
 
 pip install gensim
 
