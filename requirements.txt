@@ -1,0 +1,8 @@
+pythainlp
+stop_words
+pandas
+gensim
+tensorflow
+keras
+deepcut
+pyldavis
