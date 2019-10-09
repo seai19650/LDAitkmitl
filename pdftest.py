@@ -13,9 +13,13 @@ import string
 import pandas
 from gensim import corpora, models
 
+import matplotlib.pyplot as plt
+from clean_doc import clean_documents
+
 # pdfreader
 from pylexto import LexTo
 from PDFreader.pdfReader import extract_pdf
+
 print("========== PART 1 : PDFReader (Import Dataset) ==========")
 data = extract_pdf('testeiei.pdf')
 print(data)
@@ -49,31 +53,36 @@ def split_word(data):
 
 print("========== PART 3 : Append in List ==========")
 #print(split_word(data))
-inpt_list = []
+data_ready = []
 data_file = []
 data_file.append(extract_pdf('testeiei.pdf'))
 data_file.append(extract_pdf('songpdf1.pdf'))
 data_file.append(extract_pdf('testfile.pdf'))
-
 for i in range(len(data_file)):
-    inpt_list.append(split_word(data_file[i]))
+    print("------- Document",i+1,"-----------")
+    print(clean_documents(data_file[i]))
+    data_ready.append(split_word(clean_documents(data_file[i])))
+    print("-------------------------")
 
 
 #We will turn this into a term dictionary for our model
+# data_ready = []
+# for i in range(len(data_file)):
+#     text = data_file[i]
+#     data_ready.append(split_word(text))
+print("Data ready:",data_ready)
 
 # turn our tokenized documents into a id <-> term dictionary
-dictionary = corpora.Dictionary(inpt_list)
+dictionary = corpora.Dictionary(data_ready)
 dict2 = {dictionary[ID]:ID for ID in dictionary.keys()  }
 
 # convert tokenized documents into a document-term matrix
-corpus = [dictionary.doc2bow(text) for text in inpt_list]
-
-
-data_ready = []
-for i in range(len(data_file)):
-    text = data_file[i]
-    data_ready.append(split_word(text))
-print(data_ready)
+corpus = [dictionary.doc2bow(text) for text in data_ready]
+print("")
+print("Corpus:", corpus)
+print("")
+print("Dictonary:", dictionary)
+print("")
 
 print("========== PART 4 : Generate LDA Model ==========")
 # generate LDA model
@@ -81,11 +90,21 @@ import gensim
 num_top = 8
 num_words = 8
 num_it = 50
-lda_model = gensim.models.ldamodel.LdaModel(corpus,num_top, id2word = dictionary, random_state = 2, passes=num_it)
+# lda_model = gensim.models.ldamodel.LdaModel(corpus,num_top, id2word = dictionary, random_state = 2, passes=num_it)
+lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+                                           id2word=dictionary,
+                                           num_topics=num_top, 
+                                           random_state=100,
+                                           update_every=1,
+                                           chunksize=10,
+                                           passes=num_it,
+                                           alpha='symmetric',
+                                           iterations=100,
+                                           per_word_topics=True)
 lda_model.show_topics(num_top, num_words, log=True, formatted=False)
 pprint(lda_model.print_topics())
 
-#ldamodel.save('HDTwork/lda' + str(num_top) + '_Topics_' + str(num_it) + '_Passes.model')
+# lda_model.save('HDTwork/lda' + str(num_top) + '_Topics_' + str(num_it) + '_Passes.model')
 
 # Gensim
 # import gensim, spacy, logging, warnings
@@ -93,7 +112,7 @@ pprint(lda_model.print_topics())
 # import gensim.corpora as corpora
 # from gensim.utils import lemmatize, simple_preprocess
 # from gensim.models import CoherenceModel
-import matplotlib.pyplot as plt
+
 
 # # NLTK Stop words
 # print("========== PART 1 : Stop Words ==========")
@@ -311,24 +330,24 @@ for i, topic in topics:
     for word, weight in topic:
         out.append([word, i , weight, counter[word]])
 
-df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])        
+# df = pd.DataFrame(out, columns=['word', 'topic_id', 'importance', 'word_count'])        
 
-# Plot Word Count and Weights of Topic Keywords
-fig, axes = plt.subplots(2, 2, figsize=(16,10), sharey=True, dpi=160)
-cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
-for i, ax in enumerate(axes.flatten()):
-    ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
-    ax_twin = ax.twinx()
-    ax_twin.bar(x='word', height="importance", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.2, label='Weights')
-    ax.set_ylabel('Word Count', color=cols[i])
-    ax_twin.set_ylim(0, 0.030); ax.set_ylim(0, 3500)
-    ax.set_title('Topic: ' + str(i), color=cols[i], fontsize=16)
-    ax.tick_params(axis='y', left=False)
-    ax.set_xticklabels(df.loc[df.topic_id==i, 'word'], rotation=30, horizontalalignment= 'right')
-    ax.legend(loc='upper left'); ax_twin.legend(loc='upper right')
+# # Plot Word Count and Weights of Topic Keywords
+# fig, axes = plt.subplots(2, 2, figsize=(16,10), sharey=True, dpi=160)
+# cols = [color for name, color in mcolors.TABLEAU_COLORS.items()]
+# for i, ax in enumerate(axes.flatten()):
+#     ax.bar(x='word', height="word_count", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.5, alpha=0.3, label='Word Count')
+#     ax_twin = ax.twinx()
+#     ax_twin.bar(x='word', height="importance", data=df.loc[df.topic_id==i, :], color=cols[i], width=0.2, label='Weights')
+#     ax.set_ylabel('Word Count', color=cols[i])
+#     ax_twin.set_ylim(0, 0.030); ax.set_ylim(0, 3500)
+#     ax.set_title('Topic: ' + str(i), color=cols[i], fontsize=16)
+#     ax.tick_params(axis='y', left=False)
+#     ax.set_xticklabels(df.loc[df.topic_id==i, 'word'], rotation=30, horizontalalignment= 'right')
+#     ax.legend(loc='upper left'); ax_twin.legend(loc='upper right')
 
-fig.tight_layout(w_pad=2)    
-fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
+# fig.tight_layout(w_pad=2)    
+# fig.suptitle('Word Count and Importance of Topic Keywords', fontsize=22, y=1.05)    
 # plt.show()
 
 
@@ -476,3 +495,4 @@ import pyLDAvis.gensim
 
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary=lda_model.id2word)
 pyLDAvis.save_html(vis, "LDA_test.html")
+print("\nCreate HTML Success")

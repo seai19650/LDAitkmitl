@@ -48,7 +48,7 @@ def thai_distributed_spacing_formatter(text):
     return data
 
 def regex_formatter(text):
-    data = text[:500]
+    data = text
     # manage aum vowel
     b = 0
     aum_format = [' า',' ่า',' ้า',' ๊า',' ๋า','้่า','่่า','๊่า','๋่า']
@@ -56,30 +56,30 @@ def regex_formatter(text):
     expand = 10
     for i in range(len(aum_format)): 
         b=0 # search from start document     
-        print("\n-----------\n")
-        print("format: \"",aum_format[i],"\"")  
+        # print("\n-----------\n")
+        # print("format: \"",aum_format[i],"\"")  
         ind = data.find(aum_format[i],b)
         
-        print("ind:",ind)
-        print(data[:ind])
-        print(data[ind:ind+10])
+        # print("ind:",ind)
+        # print(data[:ind])
+        # print(data[ind:ind+10])
         while(ind != -1):
-            print("helloworld")
-            print("s--"+data[ind-expand:ind+expand])
+            # print("helloworld")
+            # print("s--"+data[ind-expand:ind+expand])
             data = data[:ind]+ replacer[i] + data[ind+len(aum_format[i]):]
             # print("\ndata[:ind] -> ",data[:ind])
             # print("\nreplacer[i] -> ",replacer[i])
             # print("\ndata[ind+len(aum_format[i]):] -> ",data[ind+len(aum_format[i]):])
-            print("t--"+data[ind-expand:ind+expand])
+            # print("t--"+data[ind-expand:ind+expand])
 
-            print("\n----- next ------\n")
+            # print("\n----- next ------\n")
             b = ind
-            print("b in next:", b)
+            # print("b in next:", b)
             ind = data.find(aum_format[i],b)
-            print("ind in next: ",ind)
-            print(data[:ind])
-            print(data[ind:ind+10])
-    print(data)
+            # print("ind in next: ",ind)
+            # print(data[:ind])
+            # print(data[ind:ind+10])
+    # print(data)
     # fragment = data.split(" ")
     # for i in range(len(fragment)):
     #     if(re.match('.*[ิืึีั]$',fragment[i])):
