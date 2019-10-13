@@ -12,7 +12,9 @@
 * For Mac Mojave
 
 1. Install a command line tool by running the following command in terminal: open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
+
 https://stackoverflow.com/questions/52509602/cant-compile-c-program-on-a-mac-after-upgrade-to-mojave
 
 2. Add CPATH for gcc environment by running the following command in terminal or adding it to the bash_profile: export CPATH=/Library/Developer/CommandLineTools/usr/include/c++/v1
+
 https://github.com/pytries/marisa-trie/issues/50
