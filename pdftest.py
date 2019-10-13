@@ -14,29 +14,55 @@ import pandas
 from gensim import corpora, models
 
 import matplotlib.pyplot as plt
-from clean_doc import clean_documents
+from clean_doc import clean_documents, clean_thaistopwords
 
 # pdfreader
 from pylexto import LexTo
 from PDFreader.pdfReader import extract_pdf
+#docx3txt
+import docx2txt
 
-print("========== PART 1 : PDFReader (Import Dataset) ==========")
-data = extract_pdf('testeiei.pdf')
-print(data)
+print("========== PART 1 : Import Dataset ==========")
+data_file = []
+# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/docx/MRG5680058/TRFreport_Kontad newer.docx')
+# data_file.append('PDG5950003_full.pdf')
+# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/pdf/PDG5950003_full.pdf')
+# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/pdf/SRI5851205_full.pdf') 
+
+data_file.append('FinalReport_Sample/pdf/RDG56A030_full.pdf') #pass
+data_file.append('FinalReport_Sample/pdf/RDG60T0048V01_full.pdf') #pass
+
+# data_file.append('FinalReport_Sample/problem/mod-RDG60T0025V01_full.pdf')
+# data_file.append('FinalReport_Sample/problem/mod-SRI5851205_full.pdf')
+
+
+
+for i in range(len(data_file)):
+    if data_file[i].endswith('.pdf'):
+        print("Document",i+1, " is pdf file.")
+        print("filename:", data_file[i])
+        # pdf document
+        data_file[i] = extract_pdf(data_file[i])
+    elif data_file[i].endswith('.docx'):
+        print("Document",i+1, " is docx file.")
+        # docx document
+        data_file[i] = docx2txt.process(data_file[i])
+
 
 print("========== PART 2 : Split word ==========")
 def split_word(data):
     
     #empty this for participants
     words = thai_stopwords()
+    thaiwords = clean_thaistopwords()
     en_stop = get_stop_words('en')
     p_stemmer = PorterStemmer()
     
-    tokens = word_tokenize(data, engine='deepcut')
+    tokens = word_tokenize(data, engine='newmm')
     #print(tokens)
     
     # remove stop words
-    stopped_tokens = [i for i in tokens if not i in words and not i in en_stop]
+    stopped_tokens = [i for i in tokens if not i in words and not i in en_stop and not i in thaiwords]
     #print(stopped_tokens)
     
     # stem words
@@ -51,13 +77,8 @@ def split_word(data):
     
     return tokens
 
-print("========== PART 3 : Append in List ==========")
-#print(split_word(data))
+print("========== PART 3 : Clean Data ==========")
 data_ready = []
-data_file = []
-data_file.append(extract_pdf('testeiei.pdf'))
-data_file.append(extract_pdf('songpdf1.pdf'))
-data_file.append(extract_pdf('testfile.pdf'))
 for i in range(len(data_file)):
     print("------- Document",i+1,"-----------")
     print(clean_documents(data_file[i]))
@@ -205,7 +226,7 @@ pprint(lda_model.print_topics())
 
 # 6. What is the Dominant topic and its percentage contribution in each document
 print("========== PART 6 ==========")
-def format_topics_sentences(ldamodel=None, corpus=corpus, texts=data):
+def format_topics_sentences(ldamodel=None, corpus=corpus, texts=data_ready):
     # Init output
     sent_topics_df = pd.DataFrame()
 
@@ -495,4 +516,4 @@ import pyLDAvis.gensim
 
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary=lda_model.id2word)
 pyLDAvis.save_html(vis, "LDA_test.html")
-print("\nCreate HTML Success")
+print("\n========== ****Create HTML Success**** ==========")

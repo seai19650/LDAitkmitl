@@ -8,12 +8,16 @@ def clean_documents(document):
     document = re.sub(r'\)','', document)
     document = re.sub(r'\[\n','', document)
     document = re.sub(r'\]\n','', document)
+    document = re.sub(r'±','', document)
+    
+    
     
     # ลบ hashtag
     document = re.sub(r'\n','',document)
     
     #ลบ dash
     document = re.sub(r'-','',document)
+    document = re.sub(r'–','', document)
     
     #ลบอักขระพิเศษ
     document = re.sub(r'§','',document)
@@ -31,3 +35,12 @@ def clean_documents(document):
     document = ' '.join(document.split())
     
     return document
+
+def clean_thaistopwords():
+    thaistopwords = []
+    with open('corpus/stopwords-th.txt', 'r', encoding='utf-8-sig') as my_file:
+        for line in my_file:
+            cleanthaistopword = re.sub("\n", "", line)
+            thaistopwords.append(cleanthaistopword)
+    # print(thaistopwords)
+    return thaistopwords

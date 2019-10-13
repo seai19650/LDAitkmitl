@@ -6,3 +6,5 @@ tensorflow
 keras
 deepcut
 pyldavis
+jpype1
+pdfminer.six
