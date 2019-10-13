@@ -7,9 +7,9 @@
 3. RUN python pdftest.py
 
 
-* If you got an error: marisa-trie/include/marisa/stdio.h:4:10: fatal error: 'cstdio' file not found
+*If you got an error: marisa-trie/include/marisa/stdio.h:4:10: fatal error: 'cstdio' file not found
 
-For Mac Mojave
+*For Mac Mojave
 
 1. Install a command line tool by running the following command in terminal: open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
 https://stackoverflow.com/questions/52509602/cant-compile-c-program-on-a-mac-after-upgrade-to-mojave
