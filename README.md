@@ -7,7 +7,7 @@
 3. RUN python pdftest.py
 
 
-*If you got an error: marisa-trie/include/marisa/stdio.h:4:10: fatal error: 'cstdio' file not found
+<b>If you got an error: marisa-trie/include/marisa/stdio.h:4:10: fatal error: 'cstdio' file not found</b>
 
 *For Mac Mojave
 
