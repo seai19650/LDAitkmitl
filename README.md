@@ -2,9 +2,9 @@
 
 1. pip install -r requirements.txt
 
-2. You don't have to pip install pylexto, just MOVE "pylexto" and "jpype" folders in your /anaconda3/lib/python3.7/site-packages/ (before RUN pdftest.py, pls delete these folders)
+2. You don't have to pip install pylexto, just MOVE "pylexto" and "jpype" folders in your ../anaconda3/lib/python3.7/site-packages/ (before RUN main.py, pls delete these folders)
 
-3. RUN python pdftest.py
+3. RUN python main.py
 
 
 <b>If you got an error: marisa-trie/include/marisa/stdio.h:4:10: fatal error: 'cstdio' file not found</b>

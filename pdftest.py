@@ -4,7 +4,7 @@ import re, numpy as np, pandas as pd
 from pprint import pprint
 
 # pythainlp - word tokenize
-from pythainlp import word_tokenize
+from pythainlp.tokenize import word_tokenize
 import pythainlp.corpus
 from pythainlp.corpus import thai_words, thai_stopwords
 from stop_words import get_stop_words
@@ -19,24 +19,16 @@ from clean_doc import clean_documents, clean_thaistopwords
 # pdfreader
 from pylexto import LexTo
 from PDFreader.pdfReader import extract_pdf
-#docx3txt
+
+#docx2xt
 import docx2txt
 
-print("========== PART 1 : Import Dataset ==========")
+print("========== PART 1 : Input Dataset ==========")
 data_file = []
-# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/docx/MRG5680058/TRFreport_Kontad newer.docx')
-# data_file.append('PDG5950003_full.pdf')
-# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/pdf/PDG5950003_full.pdf')
-# data_file.append('/Users/dhanamon/LDAitkmitl/FinalReport_Sample/pdf/SRI5851205_full.pdf') 
+data_file.append('FinalReport_Sample/pdf/RDG56A030_full.pdf') 
+data_file.append('FinalReport_Sample/pdf/RDG60T0048V01_full.pdf') 
 
-data_file.append('FinalReport_Sample/pdf/RDG56A030_full.pdf') #pass
-data_file.append('FinalReport_Sample/pdf/RDG60T0048V01_full.pdf') #pass
-
-# data_file.append('FinalReport_Sample/problem/mod-RDG60T0025V01_full.pdf')
-# data_file.append('FinalReport_Sample/problem/mod-SRI5851205_full.pdf')
-
-
-
+# Checking format file
 for i in range(len(data_file)):
     if data_file[i].endswith('.pdf'):
         print("Document",i+1, " is pdf file.")
@@ -51,7 +43,6 @@ for i in range(len(data_file)):
 
 print("========== PART 2 : Split word ==========")
 def split_word(data):
-    
     #empty this for participants
     words = thai_stopwords()
     thaiwords = clean_thaistopwords()
@@ -74,7 +65,6 @@ def split_word(data):
     #print(single_alpha_num_tokens)
     deletelist = [' ', '  ', '   ','none','    ','\n','\x0c']
     tokens = [i for i in single_alpha_num_tokens if not i in deletelist]
-    
     return tokens
 
 print("========== PART 3 : Clean Data ==========")
@@ -86,7 +76,7 @@ for i in range(len(data_file)):
     print("-------------------------")
 
 
-#We will turn this into a term dictionary for our model
+# We will turn this into a term dictionary for our model
 # data_ready = []
 # for i in range(len(data_file)):
 #     text = data_file[i]
