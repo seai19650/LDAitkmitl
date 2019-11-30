@@ -84,7 +84,7 @@ for i in range(len(data_file)):
 
 # turn our tokenized documents into a id <-> term dictionary
 dictionary = corpora.Dictionary(data_ready)
-dict2 = {dictionary[ID]:ID for ID in dictionary.keys()  }
+dict2 = {dictionary[ID]:ID for ID in dictionary.keys()}
 # print(dict2)
 
 wordid = []
@@ -111,6 +111,7 @@ for doc_tokens in data_ready:
 # print("Found %d unique terms in this corpus" % len(counts))
 # print(counts)
 
+# sort frequency count of unique word
 import operator
 sorted_counts = sorted(counts.items(), key=operator.itemgetter(1), reverse=True)
 # print(sorted_counts)
@@ -120,10 +121,11 @@ for word, count in sorted_counts:
     word_list.append(word)
     count_list.append(count)
 
-import pandas as pd 
-df= pd.DataFrame({"wordToken":word_list, "wordCount":count_list}) 
 
-# print(df, "\n") 
+print("========== PART 3.1 : Detecting Outlier ==========")
+# list to dataframe
+df= pd.DataFrame({"wordToken":word_list, "wordCount":count_list}) 
+# print(df) 
 
 # --------- Identify outliers with interquartile range (IQR) ----------
 from numpy import percentile
@@ -142,17 +144,17 @@ lower, upper = q25 - cut_off, q75 + cut_off
 outliers = [x for x in data if x < lower or x > upper]
 # print('Identified outliers: %d' % len(outliers))
 
+print("========== PART 3.2 : Removing Outlier ==========")
 # Remove outliers
 outliers_removed = [x for x in data if x >= lower and x <= upper]
 # print('Non-outlier observations: %d' % len(outliers_removed))
-
-import numpy as np
 outlier_u = np.unique(np.array(outliers))
 df1 = df
 for i in outlier_u:
-    df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan)
-
+    df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan) #Replace with Nan and will drop this column
 df1 = df1.dropna()
+
+# Bring words and count of words back to corpus type
 counts = []
 words = df1['wordToken'].values.tolist()
 words_id = []
@@ -162,7 +164,6 @@ for num in range(0, len(word_origin)):
             # print("Origin word: ",wordid[num], word_origin[num])
             words_id.append(wordid[num])
             counts.append(df1['wordCount'].loc[df1['wordToken'] == word_origin[num]].values[0])
-
 zipbWord = zip(words_id, counts)
 wordlist = list(zipbWord)
 corpus_remove_outlier = [wordlist]
