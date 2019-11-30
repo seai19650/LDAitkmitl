@@ -36,21 +36,23 @@ for i in range(len(data_file)):
     cleaned_data = clean_alphabet(data_file[i])
     # Split word in document
     data_ready.append(split_word(cleaned_data))
-    print("-------------------------")
+    # print("-------------------------")
 
 print("========== PART 3 : Bag of word ==========")
 # turn our tokenized documents into a id <-> term dictionary
 dictionary = corpora.Dictionary(data_ready)
 dict2 = {dictionary[ID]:ID for ID in dictionary.keys()}
 
+wordid = []
+word_origin = []
+for ID in dictionary.keys():
+    wordid.append(ID)
+    print(ID, dictionary[ID])
+    word_origin.append(dictionary[ID])
+
 # convert tokenized documents into a document-term matrix
 corpus = [dictionary.doc2bow(text) for text in data_ready]
-print("")
-print("Corpus:", corpus)
-print("")
-print("Dictonary:", dictionary)
-print("")
-
+print("Corpus: ",corpus)
 
 counts = {}
 # process filtered tokens for each document
@@ -62,10 +64,66 @@ for doc_tokens in data_ready:
         # a new term?
         else:
             counts[token] = 1
-print("Found %d unique terms in this corpus" % len(counts))
-print(counts)
+# print("Found %d unique terms in this corpus" % len(counts))
+# print(counts)
 
 import operator
 sorted_counts = sorted(counts.items(), key=operator.itemgetter(1), reverse=True)
-print(sorted_counts)
+# print(sorted_counts)
+word_list = []
+count_list = []
+for word, count in sorted_counts:
+    word_list.append(word)
+    count_list.append(count)
+
+import pandas as pd 
+df= pd.DataFrame({"wordToken":word_list, "wordCount":count_list}) 
+
+# print(df, "\n") 
+
+# --------- Identify outliers with interquartile range (IQR) ----------
+from numpy import percentile
+data = df['wordCount']
+
+# Calculate interquartile range
+q25, q75 = percentile(data, 25), percentile(data, 75)
+iqr = q75 - q25
+# print('Percentiles: 25th=%.3f, 75th=%.3f, IQR=%.3f' % (q25, q75, iqr))
+
+# Calculate the outlier cutoff
+cut_off = iqr * 1.5
+lower, upper = q25 - cut_off, q75 + cut_off
+
+# Identify outliers
+outliers = [x for x in data if x < lower or x > upper]
+# print('Identified outliers: %d' % len(outliers))
+
+# Remove outliers
+outliers_removed = [x for x in data if x >= lower and x <= upper]
+# print('Non-outlier observations: %d' % len(outliers_removed))
+
+import numpy as np
+outlier_u = np.unique(np.array(outliers))
+df1 = df
+for i in outlier_u:
+    df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan)
+
+df1 = df1.dropna()
+counts = []
+words = df1['wordToken'].values.tolist()
+words_id = []
+for num in range(0, len(word_origin)):
+    for word in words:
+        if word == word_origin[num]:
+            # print("Origin word: ",wordid[num], word_origin[num])
+            words_id.append(wordid[num])
+            counts.append(df1['wordCount'].loc[df1['wordToken'] == word_origin[num]].values[0])
+
+zipbObj = zip(words_id, counts)
+list_ = list(zipbObj)
+print([list_])
+
+print("=======================")
+# print(dictionary.keys())
+# print(type(corpus))
 

@@ -30,6 +30,14 @@ def clean_alphabet(document):
     document = re.sub(r'‘','',document)
     document = re.sub(r'’','',document)
     document = re.sub(r'','',document)
+    document = re.sub(r'•','',document)
+    document = re.sub(r'™','',document)
+    document = re.sub(r'≤','',document)
+    document = re.sub(r'≥','',document)
+    document = re.sub(r'……','',document)
+    document = re.sub(r'…','',document)
+    
+    
     
     
     # ลบ เครื่องหมายคำพูด (punctuation)
