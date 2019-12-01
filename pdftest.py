@@ -153,8 +153,8 @@ df1 = df
 for i in outlier_u:
     df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan) #Replace with Nan and will drop this column
 df1 = df1.dropna()
-
-# Bring words and count of words back to corpus type
+ 
+# Bring list of words and count of words back to corpus type
 counts = []
 words = df1['wordToken'].values.tolist()
 words_id = []
