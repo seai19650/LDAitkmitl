@@ -22,6 +22,8 @@ from PDFreader.pdfReader import extract_pdf
 #docx2xt
 import docx2txt
 
+from outlier import removing_outlier
+
 print("========== PART 1 : Input Dataset ==========")
 data_file = []
 data_file.append('FinalReport_Sample/pdf/RDG56A030_full.pdf') 
@@ -84,15 +86,8 @@ for i in range(len(data_file)):
 
 # turn our tokenized documents into a id <-> term dictionary
 dictionary = corpora.Dictionary(data_ready)
-dict2 = {dictionary[ID]:ID for ID in dictionary.keys()}
+# dict2 = {dictionary[ID]:ID for ID in dictionary.keys()}
 # print(dict2)
-
-wordid = []
-word_origin = []
-for ID in dictionary.keys():
-    wordid.append(ID)
-    # print(ID, dictionary[ID])
-    word_origin.append(dictionary[ID])
 
 # convert tokenized documents into a document-term matrix
 corpus = [dictionary.doc2bow(text) for text in data_ready]
@@ -115,58 +110,10 @@ for doc_tokens in data_ready:
 import operator
 sorted_counts = sorted(counts.items(), key=operator.itemgetter(1), reverse=True)
 # print(sorted_counts)
-word_list = []
-count_list = []
-for word, count in sorted_counts:
-    word_list.append(word)
-    count_list.append(count)
 
-
-print("========== PART 3.1 : Detecting Outlier ==========")
-# list to dataframe
-df= pd.DataFrame({"wordToken":word_list, "wordCount":count_list}) 
-# print(df) 
-
-# --------- Identify outliers with interquartile range (IQR) ----------
-from numpy import percentile
-data = df['wordCount']
-
-# Calculate interquartile range
-q25, q75 = percentile(data, 25), percentile(data, 75)
-iqr = q75 - q25
-# print('Percentiles: 25th=%.3f, 75th=%.3f, IQR=%.3f' % (q25, q75, iqr))
-
-# Calculate the outlier cutoff
-cut_off = iqr * 1.5
-lower, upper = q25 - cut_off, q75 + cut_off
-
-# Identify outliers
-outliers = [x for x in data if x < lower or x > upper]
-# print('Identified outliers: %d' % len(outliers))
-
-print("========== PART 3.2 : Removing Outlier ==========")
-# Remove outliers
-outliers_removed = [x for x in data if x >= lower and x <= upper]
-# print('Non-outlier observations: %d' % len(outliers_removed))
-outlier_u = np.unique(np.array(outliers))
-df1 = df
-for i in outlier_u:
-    df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan) #Replace with Nan and will drop this column
-df1 = df1.dropna()
- 
-# Bring list of words and count of words back to corpus type
-counts = []
-words = df1['wordToken'].values.tolist()
-words_id = []
-for num in range(0, len(word_origin)):
-    for word in words:
-        if word == word_origin[num]:
-            # print("Origin word: ",wordid[num], word_origin[num])
-            words_id.append(wordid[num])
-            counts.append(df1['wordCount'].loc[df1['wordToken'] == word_origin[num]].values[0])
-zipbWord = zip(words_id, counts)
-wordlist = list(zipbWord)
-corpus_remove_outlier = [wordlist]
+# ------ Detecting and Removing Outlier ------
+corpus_remove_outlier = removing_outlier(sorted_counts, dictionary)
+print(corpus_remove_outlier)
 
 print("========== PART 4 : Generate LDA Model ==========")
 # generate LDA model
