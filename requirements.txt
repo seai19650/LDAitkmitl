@@ -2,9 +2,9 @@ pythainlp
 stop_words
 pandas
 gensim
-tensorflow
+tensorflow==1.14.0
 keras
 deepcut
 pyldavis
-jpype1
+JPype1==0.7.0
 pdfminer.six
