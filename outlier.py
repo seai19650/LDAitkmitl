@@ -23,6 +23,7 @@ def removing_outlier(sorted_counts, dictionary):
 
     # --------- Identify outliers with interquartile range (IQR) ----------
     data = df['wordCount']
+    print(df.describe())
 
     # Calculate interquartile range
     q25, q75 = percentile(data, 25), percentile(data, 75)
@@ -35,18 +36,20 @@ def removing_outlier(sorted_counts, dictionary):
 
     # Identify outliers
     outliers = [x for x in data if x < lower or x > upper]
-    # print('Identified outliers: %d' % len(outliers))
+    print('Identified outliers: %d' % len(outliers))
 
     print("========== PART 3.2 : Removing Outlier ==========")
     # Remove outliers
     outliers_removed = [x for x in data if x >= lower and x <= upper]
-    # print('Non-outlier observations: %d' % len(outliers_removed))
+    print('Non-outlier observations: %d' % len(outliers_removed))
+    print(outliers)
     outlier_u = np.unique(np.array(outliers))
     df1 = df
     for i in outlier_u:
         df1['wordCount'] = df1['wordCount'].replace(to_replace=i, value=np.nan) #Replace with Nan and will drop this column
     df1 = df1.dropna()
-    
+    print(df1)
+    print(df1.describe())
     # Bring list of words and count of words back to corpus type
     counts = []
     words = df1['wordToken'].values.tolist()

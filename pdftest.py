@@ -23,11 +23,15 @@ from PDFreader.pdfReader import extract_pdf
 import docx2txt
 
 from outlier import removing_outlier
+from zipf_law import zipf_law
 
 print("========== PART 1 : Input Dataset ==========")
 data_file = []
 data_file.append('FinalReport_Sample/pdf/RDG56A030_full.pdf') 
 data_file.append('FinalReport_Sample/pdf/RDG60T0048V01_full.pdf') 
+data_file.append('/Users/dhanamon/Google Drive/TRF_Y61_Mon/TRF_Mining/gs-mod/RDG6110019_full.pdf') 
+data_file.append('/Users/dhanamon/Google Drive/TRF_Y61_Mon/TRF_Mining/gs-mod/RDG6110005_full.pdf') 
+data_file.append('/Users/dhanamon/Google Drive/TRF_Y61_Mon/TRF_Mining/gs-mod/RDG6110022_full.pdf') 
 
 # Checking format file
 for i in range(len(data_file)):
@@ -72,7 +76,7 @@ print("========== PART 3 : Clean Data ==========")
 data_ready = []
 for i in range(len(data_file)):
     print("------- Document",i+1,"-----------")
-    print(clean_alphabet(data_file[i]))
+    # print(clean_alphabet(data_file[i]))
     data_ready.append(split_word(clean_alphabet(data_file[i])))
     print("-------------------------")
 
@@ -113,7 +117,10 @@ sorted_counts = sorted(counts.items(), key=operator.itemgetter(1), reverse=True)
 
 # ------ Detecting and Removing Outlier ------
 corpus_remove_outlier = removing_outlier(sorted_counts, dictionary)
-print(corpus_remove_outlier)
+# print(corpus_remove_outlier)
+
+# ------ Zipf's Law -------
+# corpus_remove_outlier = zipf_law(sorted_counts, dictionary)
 
 print("========== PART 4 : Generate LDA Model ==========")
 # generate LDA model
@@ -525,5 +532,5 @@ print("========== PART 14 ==========")
 import pyLDAvis.gensim
 
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary=lda_model.id2word)
-pyLDAvis.save_html(vis, "LDA_test.html")
+pyLDAvis.save_html(vis, "LDA_test_outlier.html")
 print("\n========== ****Create HTML Success**** ==========")
