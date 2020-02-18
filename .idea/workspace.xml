@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4efb39f7-6bea-499d-a7f5-f2b935089f49" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/document/1_NationalStrategies_20y.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/Icon&#10;" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/abstract_page/Icon&#10;" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/docx/MRG5980243.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/docx/MRG5980259.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/docx/RDG5250070.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/pdf/Icon&#10;" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_original_pyLDAvis.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_use_clean_doc.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_use_outlier.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_use_pdftest.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_use_test_V1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/no_use_zipf_law.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2550">
-              <caret line="157" column="24" selection-start-line="157" selection-start-column="24" selection-end-line="157" selection-end-column="24" />
+            <state relative-caret-position="629">
+              <caret line="285" column="8" selection-start-line="285" selection-start-column="8" selection-end-line="285" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -83,6 +72,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -94,17 +84,6 @@
               <item name="LDAitkmitl" type="b2602c69:ProjectViewProjectNode" />
               <item name="LDAitkmitl" type="462c0819:PsiDirectoryNode" />
               <item name="PDFreader" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="LDAitkmitl" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
             </path>
           </expand>
           <select />
@@ -220,23 +199,23 @@
       <workItem from="1575193815861" duration="385000" />
       <workItem from="1577606703371" duration="685000" />
       <workItem from="1580023058506" duration="47000" />
-      <workItem from="1580023109993" duration="6097000" />
+      <workItem from="1580023109993" duration="7515000" />
+      <workItem from="1581925803241" duration="303000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11117000" />
+    <option name="totallyTimeSpent" value="12838000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19957082" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20529328" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.14727722" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.14727722" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -327,8 +306,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2550">
-          <caret line="157" column="24" selection-start-line="157" selection-start-column="24" selection-end-line="157" selection-end-column="24" />
+        <state relative-caret-position="629">
+          <caret line="285" column="8" selection-start-line="285" selection-start-column="8" selection-end-line="285" selection-end-column="8" />
         </state>
       </provider>
     </entry>

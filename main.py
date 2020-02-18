@@ -202,7 +202,7 @@ class LDAModeling:
 
     """to remove"""
     # Generate LDA Model
-    def LDAmodel(self, dictionary, corpus, num_top):
+    def LDAmodel(self, dictionary, corpus, num_top=10):
         ldamodel = LdaModel(corpus, num_top, id2word=dictionary, decay=0.6, random_state=2, passes=10)
         return ldamodel
 
@@ -283,7 +283,7 @@ class LDAModeling:
 
         ldamodel = self.LDAmodel(dictionary2, corpus2, num_top)
         term_dist_topic = ldamodel.show_topics(num_top, 1000, log=True, formatted=False)
-        # print(term_dist_topic)
+        print(term_dist_topic)
 
         print("========== PART 4 : Topic-term distribution ==========")
         ### Topic-Term Dist
