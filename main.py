@@ -12,7 +12,7 @@ from PDFreader.pdfReader import extract_pdf
 import string
 import pythainlp.corpus
 import pyLDAvis.gensim
-import os
+
 import random
 import pandas as pd
 import sklearn
@@ -23,6 +23,14 @@ import re
 import docx2txt
 from data_prepare import split_word, cut_character, postag, add_frequency
 from distribution import topicTerm_dist,docTopic_dist,Ndoc_topic
+
+#This package is for downloading pdf
+import urllib.request
+
+#This package is for parsing a file name
+import ntpath
+
+import os
 
 """An ensemble classifier that uses heterogeneous models at the base layer and a aggregation model at the 
     aggregation layer. A k-fold cross validation is used to generate training data for the stack layer model.
@@ -130,10 +138,10 @@ class Util:
 
     def read_file(self, files):
         data_file = []
-
+        # data_file_text = "";
         # Read all given files in docx or readable pdf (readable means such a pdf file must be able to be read by pdfminer.)
         for f in files:
-            #
+            data_file_text = ""
             try:
                 f_list = re.split("; |/|\\.", f)
                 if f.endswith('.pdf'):
@@ -146,7 +154,7 @@ class Util:
 
                 data_file.append(data_file_text)
             except:
-                print("=======ERROR cannot fild the below file in a given path=======")
+                print("=======ERROR cannot find the below file in a given path=======")
                 print(f, f_list)
                 print('+++++++++++++++++++')
 
@@ -157,31 +165,53 @@ class Util:
         #         data_file_text.close()
         return self.data
 
-    def find_read_file(self, path):
+    # def find_read_file(self, path):
+    #
+    #     # Find all files in a given input path and list absolute paths to them in the variable files
+    #     files = []
+    #     for r, d, f in os.walk(path):
+    #         for file in f:
+    #             # Text file
+    #             if 'news.txt' in file:
+    #                 files.append(os.path.join(r, file))
+    #             elif file.endswith('.pdf'):
+    #                 print(file)
+    #                 files.append(os.path.join(r, file))
+    #             elif '.docx' in file:
+    #                 print(file)
+    #                 files.append(os.path.join(r, file))
+    #
+    #     data = self.read_file(files)
+    #     return data
+
+    def filter_file_to_read(self, local_path, files):
 
         # Find all files in a given input path and list absolute paths to them in the variable files
-        files = []
-        for r, d, f in os.walk(path):
-            for file in f:
-                # Text file
-                if 'news.txt' in file:
-                    files.append(os.path.join(r, file))
-                #             elif file.endswith('.pdf'):
-                #                 print(file)
-                #                 files.append(os.path.join(r, file))
-                elif '.docx' in file:
-                    print(file)
-                    files.append(os.path.join(r, file))
-
-        data = self.read_file(files)
+        to_read_files = []
+        for file in files:
+            if file.endswith('.pdf'):
+                print('-- To read file: \"{0}\". --', file)
+                to_read_files.append(local_path + file)
+            elif file.endswith('.docx'):
+                print('-- To read file: \"{0}\". --', file)
+                to_read_files.append(local_path + file)
+            else:
+                print('-- Only pdf and docx formats are supported. This file will be ignored due to not support types: \"{0}\". --', file)
+        data = self.read_file(to_read_files)
         return data
+
+
+    def path_leaf(self, path):
+        head, tail = ntpath.split(path)
+        return tail or ntpath.basename(head)
+
 
 # Create a new classifier which is based on the sckit-learn BaseEstimator and ClassifierMixin classes
 class LDAModeling:
 
     #def __init__(self):
 
-    def to_dataframe(self, data, title):
+    def to_dataframe(self, data, titles):
         """
         Changing document in dictionary to dataframe and setting field like...
         | doc_id | title | content |
@@ -191,12 +221,12 @@ class LDAModeling:
         content: Content of document.
         """
         data_doc = []
-        data_title = title
+        data_titles = titles
         data_content = []
         for doc_id in data.keys():
             data_content.append(data[doc_id][0])
             data_doc.append(doc_id)
-        data_df_dict = {'doc_id': data_doc, 'title': data_title, 'content': data_content}
+        data_df_dict = {'doc_id': data_doc, 'title': data_titles, 'content': data_content}
         data_df = pd.DataFrame.from_dict(data_df_dict)
         return data_df
 
@@ -212,28 +242,17 @@ class LDAModeling:
         lsimodel = LsiModel(corpus_tfidf, id2word=dictionary, num_topics=num_top, decay=0.5)
         return lsimodel
 
-    def performTopicModeling(self):
+    def perform_topic_modeling(self, local_path, files, abs_file_paths, titles):
 
         util = Util()
         print("========== PART 1 : Input Files ==========")
-        path = 'document/docx'
-        data = util.find_read_file(path)
-        #get input title here
-        # title = ['ผลกระทบของเอนโซ่ต่อการผันแปรของมรสุมตะวันตกเฉียงใต้ในรอบปีบริเวณประเทศไทย',
-        #           'การฟื้นฟูป่าชายเลนบ้านเปร็ดในโดยการมีส่วนร่วมของชุมชนฯ',
-        #           'ร่างยุทธศาสตร์',
-        #           'การพัฒนาประสิทธิภาพการอบยางล้อ',
-        #           'การตรวจสอบและเตรียมความพร้อมโรงพยาบาลในพื้นที่เสี่ยงภัยแผ่นดินไหว:บทเรียนจากแผ่นดินไหวแม่ลาว',
-        #           'ฤทธิ์ในการต้านการอักเสบและกดภูมิคุ้มกันของกรดวานิลลิคและการพัฒนาตำรับที่เหมาะสมสำหรับส่งผ่านทางผิวหนัง']
-        title = ['ผลกระทบของเอนโซ่ต่อการผันแปรของมรสุมตะวันตกเฉียงใต้ในรอบปีบริเวณประเทศไทย',
-                  'การฟื้นฟูป่าชายเลนบ้านเปร็ดในโดยการมีส่วนร่วมของชุมชนฯ']
-        num_doc = len(title)
-
+        data = util.filter_file_to_read(local_path, files)
+        num_doc = len(titles)
 
         print("========== PART 2 : Data Preparation and Creating Word Tokenization ==========")
 
         # Set data into dataframe type
-        data_df = self.to_dataframe(data, title)
+        data_df = self.to_dataframe(data, titles)
         data_df.head()
 
         inp_list = []
@@ -330,8 +349,65 @@ class LDAModeling:
         pyLDAvis.save_html(vis, "docx_LDAvis_newmm_2n_postag_title_10n.html")
         # vis
 
+"""
+    1) download all files from a list of URLs and save to local (API server)
+    require:
+        local_path = "/Users/Kim/Documents/TestDownloadFiles/"
+"""
+# ** todo **
+# define a local path to save files
+local_path = "/Users/Kim/Documents/TestDownloadFiles/"
 
+urls = ['https://elibrary.trf.or.th/fullP/SRI61X0602/SRI61X0602_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6240001/RDG6240001_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6210003/RDG6210003_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140033/RDG6140033_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140024/RDG6140024_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140012/RDG6140012_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140022/RDG6140022_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140023/RDG6140023_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG60H0018/RDG60H0018_full.pdf',
+        'https://elibrary.trf.or.th/fullP/RDG6140010/RDG6140010_full.pdf']
 
+titles = ['การศึกษาวิเคราะห์การทุจริตคอร์รัปชันของขบวนการเครือข่ายนายหน้าข้ามชาติในอุตสาหกรรมประมงต่อเนื่องของประเทศไทย',
+            'นวัตกรรมเพื่อพัฒนาท้องถิ่นตามแนวทางปรัชญาของเศรษฐกิจพอเพียง: กรณีศึกษาองค์กรปกครองส่วนท้องถิ่นในจังหวัดนครสวรรค์และอุทัยธานี',
+            'การศึกษาผลประโยชน์ทางธุรกิจที่เกิดจากการนำเศษพลอยมาใช้ประโยชน์ในเชิงพาณิชย์มากขึ้น',
+            'การศึกษาประสบการณ์การเรียนรู้ของเยาวชนกลุ่มชาติพันธุ์ในการสร้างความรู้ด้านนิเวศวัฒนธรรม ',
+            'การวิจัยและพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา ระบบพี่เลี้ยง และการวิจัยเป็นฐานของคณะครุศาสตร์ มหาวิทยาลัยราชภัฏ ปีที่ 2',
+            'การพัฒนาชุดการเรียนรู้วิชาศิลปะในชั้นเรียนแบบเรียนรวมที่มีนักเรียนตาบอดระดับมัธยมศึกษาตอนปลายและการทดลองขยายผล',
+            'การวิจัยและพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตปัญญาศึกษา การเป็นพี่เลี้ยงและการวิจัยเป็นฐาน ภาคกลาง-ภาคตะวันตก  ปีที่ 2 ',
+            'ระบบและกระบวนการผลิตและพัฒนาครูโดยใช้โครงงานฐานวิจัย ในพื้นที่ภาคใต้ ปีที่ 2',
+            'การศึกษาประวัติศาสตร์สังคมพหุวัฒนธรรมจากตำนานประวัติศาสตร์ท้องถิ่นภาคใต้',
+            'โครงการวิจัยและพัฒนาแนวทางการหนุนเสริมทางวิชาการเพื่อพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา ระบบพี่เลี้ยง และการวิจัยเป็นฐานของคณะครุศาสตร์ มหาวิทยาลัยราชภัฏ']
+
+util = Util()
+
+print('========== Beginning file download with urllib2. ==========')
+to_process_files = []
+abs_file_paths = []
+counter = 0;
+for url in urls:
+    file = util.path_leaf(url)
+    abs_file_path =  local_path + file
+    #print(abs_file_path)
+
+    if not os.path.isfile(abs_file_path):
+        try:
+            print('downloading file from this url: \"{0}\" with this file name : \"{1}\".'.format(url, file))
+            urllib.request.urlretrieve(url, abs_file_path)
+        except:
+            print('An exception occurred when downloading a file from this url, \"{0}\"'.format(url))
+            # Delete the title of a file that cannot be downloaded at a specific index.
+            # This is to keep two lists of abs_file_paths and titles consistent.
+            del titles[counter]
+
+    else:
+        print('-- This file, \"{0}\", already exists in: \"{1}\"! Therefore, this file will not be downloaded. --'.format(file, local_path))
+    to_process_files.append(file)
+    abs_file_paths.append(abs_file_path)
+    counter += 1;
 
 ldamodeling = LDAModeling()
-ldamodeling.performTopicModeling()
+ldamodeling.perform_topic_modeling(local_path, to_process_files, abs_file_paths, titles)
+
+
