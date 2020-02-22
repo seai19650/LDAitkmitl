@@ -12,7 +12,7 @@ import re
 from pythainlp.word_vector import *
 
 import docx2txt
-from data_prepare import split_word, cut_character, postag, add_frequency
+from TextPreProcessing import split_word, cut_character, postag, add_frequency
 
 
 class Util:

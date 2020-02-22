@@ -11,7 +11,7 @@ import natsort
 import re
 
 import docx2txt
-from data_prepare import split_word, cut_character, postag, add_frequency
+from TextPreProcessing import split_word, cut_character, postag, add_frequency
 
 # Create a new Utility class to for file management and loading
 class Util:

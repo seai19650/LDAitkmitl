@@ -1,6 +1,10 @@
 import sys
 sys.path.append("..") # Adds higher directory to python modules path.
 
+from Util import Util
+from TextPreProcessing import TextPreProcessing
+from TextDistribution import TextDistribution
+
 from pythainlp import word_tokenize
 from pythainlp.corpus import thai_words, thai_stopwords, thai_syllables
 from stop_words import get_stop_words
@@ -8,7 +12,7 @@ from nltk.stem.porter import PorterStemmer
 from gensim import corpora, models
 from gensim.models import LsiModel, LdaModel, CoherenceModel
 from pylexto import LexTo
-from PDFreader.pdfReader import extract_pdf
+
 import string
 import pythainlp.corpus
 import pyLDAvis.gensim
@@ -18,19 +22,15 @@ import pandas as pd
 import sklearn
 import numpy as np
 import matplotlib.pyplot as plt
-import re
 
-import docx2txt
-from data_prepare import split_word, cut_character, postag, add_frequency
-from distribution import topicTerm_dist,docTopic_dist,Ndoc_topic
-
-#This package is for downloading pdf
-import urllib.request
-
-#This package is for parsing a file name
-import ntpath
 
 import os
+
+
+# This package is for downloading pdf
+import urllib.request
+
+
 
 """An ensemble classifier that uses heterogeneous models at the base layer and a aggregation model at the 
     aggregation layer. A k-fold cross validation is used to generate training data for the stack layer model.
@@ -130,83 +130,9 @@ import os
     >>> cross_val_score(clf, iris.data, iris.target, cv=10)
 
     """
-# Create a new Utility class to for file management and loading
-class Util:
-
-    def __init__(self):
-        self.data = {}
-
-    def read_file(self, files):
-        data_file = []
-        # data_file_text = "";
-        # Read all given files in docx or readable pdf (readable means such a pdf file must be able to be read by pdfminer.)
-        for f in files:
-            data_file_text = ""
-            try:
-                f_list = re.split("; |/|\\.", f)
-                if f.endswith('.pdf'):
-                    """
-                        need modify here when the original file cannot be read.
-                    """
-                    data_file_text = extract_pdf(f)
-                elif f.endswith('.docx'):
-                    data_file_text = docx2txt.process(f)
-
-                data_file.append(data_file_text)
-            except:
-                print("=======ERROR cannot find the below file in a given path=======")
-                print(f, f_list)
-                print('+++++++++++++++++++')
-
-            # Add Topic in dict
-            self.data[f_list[-2]] = [str(data_file_text)]
-
-            # create rd_list for create training data
-        #         data_file_text.close()
-        return self.data
-
-    # def find_read_file(self, path):
-    #
-    #     # Find all files in a given input path and list absolute paths to them in the variable files
-    #     files = []
-    #     for r, d, f in os.walk(path):
-    #         for file in f:
-    #             # Text file
-    #             if 'news.txt' in file:
-    #                 files.append(os.path.join(r, file))
-    #             elif file.endswith('.pdf'):
-    #                 print(file)
-    #                 files.append(os.path.join(r, file))
-    #             elif '.docx' in file:
-    #                 print(file)
-    #                 files.append(os.path.join(r, file))
-    #
-    #     data = self.read_file(files)
-    #     return data
-
-    def filter_file_to_read(self, local_path, files):
-
-        # Find all files in a given input path and list absolute paths to them in the variable files
-        to_read_files = []
-        for file in files:
-            if file.endswith('.pdf'):
-                print('-- To read file: \"{0}\". --', file)
-                to_read_files.append(local_path + file)
-            elif file.endswith('.docx'):
-                print('-- To read file: \"{0}\". --', file)
-                to_read_files.append(local_path + file)
-            else:
-                print('-- Only pdf and docx formats are supported. This file will be ignored due to not support types: \"{0}\". --', file)
-        data = self.read_file(to_read_files)
-        return data
 
 
-    def path_leaf(self, path):
-        head, tail = ntpath.split(path)
-        return tail or ntpath.basename(head)
-
-
-# Create a new classifier which is based on the sckit-learn BaseEstimator and ClassifierMixin classes
+# todo edit "Create a new classifier which is based on the sckit-learn BaseEstimator and ClassifierMixin classes"
 class LDAModeling:
 
     #def __init__(self):
@@ -242,15 +168,13 @@ class LDAModeling:
         lsimodel = LsiModel(corpus_tfidf, id2word=dictionary, num_topics=num_top, decay=0.5)
         return lsimodel
 
-    def perform_topic_modeling(self, local_path, files, abs_file_paths, titles):
+    def perform_topic_modeling(self, input_local_root, files, titles, output_dir, pyLDAvis_output_file, max_no_topics = 10):
 
-        util = Util()
         print("========== PART 1 : Input Files ==========")
-        data = util.filter_file_to_read(local_path, files)
+        data = Util.filter_file_to_read(input_local_root, files)
         num_doc = len(titles)
 
         print("========== PART 2 : Data Preparation and Creating Word Tokenization ==========")
-
         # Set data into dataframe type
         data_df = self.to_dataframe(data, titles)
         data_df.head()
@@ -258,12 +182,12 @@ class LDAModeling:
         inp_list = []
         for num in range(num_doc):
             content = data_df['content'][num]
-            inp_list.append(split_word(content))
+            inp_list.append(TextPreProcessing.split_word(content))
 
-        count = 0
+        counter = 0
         for word in inp_list:
-            count += len(word)
-        print(count)
+            counter += len(word)
+        print("Unique words in this processing corpus: " + counter)
 
         # Create dictionary, corpus and corpus TFIDF
         # Turn tokenized documents into a id <-> term dictionary
@@ -277,11 +201,11 @@ class LDAModeling:
 
         # Remove character number is less than 2 words off
         num_cut = 2
-        new_lists = cut_character(inp_list, num_cut)
+        new_lists = TextPreProcessing.cut_character(inp_list, num_cut)
 
         # Remove word is not noun and prop noun by pos_tag function
         for num in range(num_doc):
-            new_lists[num] = postag(new_lists[num])
+            new_lists[num] = TextPreProcessing.postag(new_lists[num])
 
         # Create new dict and corpus
         dictionary2 = corpora.Dictionary(new_lists)
@@ -289,40 +213,38 @@ class LDAModeling:
         corpus2 = [dictionary2.doc2bow(text) for text in new_lists]
 
         # Header Title plus frequency in corpus
-        corpus2 = add_frequency(dict_2, corpus2, data_df, 10, num_doc)
+        corpus2 = TextPreProcessing.add_frequency(dict_2, corpus2, data_df, 10, num_doc)
 
         print("========== PART 3 : Generate LDA Model ==========")
         # Generate LDA Model
 
 
-        # Default number of topic is 10. If number of document is less than 10, will be used to number of topic.
-        num_top = 10
-        if num_doc <= 10:
-            num_top = num_doc
+        # Default number of topic is 10. If the number of documents is fewer than the maximum number of topics, the number of documents will be used to as the maximum number of topics.
+        # if num_doc <= 10:
+        #     max_no_topics = num_doc
+        max_no_topics = min([max_no_topics, num_doc])
 
-        ldamodel = self.LDAmodel(dictionary2, corpus2, num_top)
-        term_dist_topic = ldamodel.show_topics(num_top, 1000, log=True, formatted=False)
+        ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topics)
+        term_dist_topic = ldamodel.show_topics(max_no_topics, 1000, log=True, formatted=False)
         print(term_dist_topic)
 
         print("========== PART 4 : Topic-term distribution ==========")
         ### Topic-Term Dist
         topic_term_dist = []
-        topic_term_dist = topicTerm_dist(topic_term_dist, term_dist_topic)
+        topic_term_dist = TextDistribution.topicTerm_dist(topic_term_dist, term_dist_topic)
         print(topic_term_dist)
 
         print("========== PART 4-1 : Document-topic (all) distribution ==========")
         ### Doc_topic_all_dist
         doc_topic_dist = []
-        doc_topic_dist = docTopic_dist(doc_topic_dist, data_df, num_doc, inp_list,dictionary2,ldamodel)
+        doc_topic_dist = TextDistribution.docTopic_dist(doc_topic_dist, data_df, num_doc, inp_list,dictionary2,ldamodel)
         print(doc_topic_dist)
 
         print("========== PART 4-2 : Topic-term (min) distribution ==========")
         ### Doc_topic_min_dist
         n_doc_intopic = []
-        n_doc_intopic = Ndoc_topic(n_doc_intopic,num_doc, data_df, inp_list, dictionary2, ldamodel)
+        n_doc_intopic = TextDistribution.Ndoc_topic(n_doc_intopic,num_doc, data_df, inp_list, dictionary2, ldamodel)
         print(n_doc_intopic)
-
-
 
 
         lsimodel = self.LSImodel(dictionary2, corpus2, 6)
@@ -346,7 +268,7 @@ class LDAModeling:
         import pyLDAvis.gensim
         # pyLDAvis.enable_notebook()
         vis = pyLDAvis.gensim.prepare(ldamodel, corpus2, dictionary=ldamodel.id2word)
-        pyLDAvis.save_html(vis, "docx_LDAvis_newmm_2n_postag_title_10n.html")
+        pyLDAvis.save_html(vis, output_dir + pyLDAvis_output_file)
         # vis
 
 """
@@ -354,9 +276,13 @@ class LDAModeling:
     require:
         local_path = "/Users/Kim/Documents/TestDownloadFiles/"
 """
-# ** todo **
-# define a local path to save files
-local_path = "/Users/Kim/Documents/TestDownloadFiles/"
+# todo change these three variables
+# define a local root to save files
+input_local_root = '/Users/Kim/Documents/trf_dir/TestDownloadFiles/'
+# define an output directory to save pyLDAvis html file
+output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/'
+# define an output directory to save pyLDAvis html file
+pyLDAvis_output_file = 'docx_LDAvis_newmm_2n_postag_title_10n.html'
 
 urls = ['https://elibrary.trf.or.th/fullP/SRI61X0602/SRI61X0602_full.pdf',
         'https://elibrary.trf.or.th/fullP/RDG6240001/RDG6240001_full.pdf',
@@ -380,15 +306,14 @@ titles = ['การศึกษาวิเคราะห์การทุจ
             'การศึกษาประวัติศาสตร์สังคมพหุวัฒนธรรมจากตำนานประวัติศาสตร์ท้องถิ่นภาคใต้',
             'โครงการวิจัยและพัฒนาแนวทางการหนุนเสริมทางวิชาการเพื่อพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา ระบบพี่เลี้ยง และการวิจัยเป็นฐานของคณะครุศาสตร์ มหาวิทยาลัยราชภัฏ']
 
-util = Util()
 
 print('========== Beginning file download with urllib2. ==========')
 to_process_files = []
 abs_file_paths = []
 counter = 0;
 for url in urls:
-    file = util.path_leaf(url)
-    abs_file_path =  local_path + file
+    file = Util.path_leaf(url)
+    abs_file_path =  input_local_root + file
     #print(abs_file_path)
 
     if not os.path.isfile(abs_file_path):
@@ -402,12 +327,13 @@ for url in urls:
             del titles[counter]
 
     else:
-        print('-- This file, \"{0}\", already exists in: \"{1}\"! Therefore, this file will not be downloaded. --'.format(file, local_path))
+        print('-- This file, \"{0}\", already exists in: \"{1}\"! Therefore, this file will not be downloaded. --'.format(file, input_local_root))
     to_process_files.append(file)
-    abs_file_paths.append(abs_file_path)
     counter += 1;
 
 ldamodeling = LDAModeling()
-ldamodeling.perform_topic_modeling(local_path, to_process_files, abs_file_paths, titles)
+ldamodeling.perform_topic_modeling(input_local_root, to_process_files, titles,
+                                   output_dir, pyLDAvis_output_file,
+                                   max_no_topics = 6)
 
 
