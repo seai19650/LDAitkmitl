@@ -2,71 +2,41 @@ import re
 from PDFreader import pdfReader
 import docx2txt
 
-#This package is for parsing a file name
+# This package is for parsing a file name
 import ntpath
 
 import os
 
 """
     A Utility (Util) class acts like a collection of methods to handles file management, loading and saving. 
-    This class contains 4 static methods, including 
+    This class contains 4 static methods, including: 
         1) read_file()
         2) find_read_file()
         3) filter_file_to_read()
         4) path_leaf()
 """
+
+
 class Util:
+    """
+        This class has not either instance or static attributes
+    """
 
     """
+      A static method, read_file(files), reads all files listed in a given List
+    
     Parameters
     ----------
-    files: a list of string, required
-        The number of target classes for prediction, used to construct an array to store the prbability output from base classifiers
-
+    files: a list of files in a string format, required
+        
     Returns
     ----------
-    data: 
-
-
-    estimators: list of BaseEstimators, optional (default = 6 base estimators, including:
-            1) DecisionTreeClassifier with max_depth = 10,
-            2) ExtraTreeClassifier,
-            3) LogisticRegression,
-            4) Support Vector Machine - NuSVC,
-            5) Support Vector Machine - SVC,
-            6) KNeighborsClassifier with n_neighbors = 5)
-        A list of scikit-learn base estimators with fit() and predict() methods.
-
-    cv_folds: integer, optional (default = 5)
-        The number of k to perform k-fold cross validation to be used.
-
-    proba_2train_meta: boolean, optional (default = False)
-        A boolean flag variable to specify the meta learner at the stacked level should be trained either on label output or probability output.
-            False => trained on 'label output' - Typical Super learner classifier, using Stack Layer Training Set (Labels)
-            True => train on 'probability output' - using Stack Layer Training Set (Probabilities)
-
-    ori_input_2train_meta: boolean , optional (default = False)
-        A boolean flag variable to specify whether the meta learner should be trained on the training set with original features or not.
-            False => trained only on 'output' from base estimators
-            True => train on 'original features/inputs' plus 'output' from base estimators
-
-    meta_model_type: string, optional (default = "DCT")
-        An option in string, only either "DCT" or "LR", to specify the type of model to use at the stack layer for a meta learner
-            "DCT" => DecisionTreeClassifier
-            "LR" => LogisticRegression
-
-    est_accuracy: boolean, optional (default = False) - only available when proba_2train_meta = False
-        A boolean flag variable to analyse and print the Mean Accuracy (MA) as the strength/performance of base estimators (predictive power).
-            False => do nothing
-            True => analyse and print the mean accuracy
-
-    est_corr: boolean, optional (default = False) - only available when proba_2train_meta = False
-        A boolean flag variable to analyse and print the Pearson correlation between base estimators (diversity).
-            False => do nothing
-            True => analyse and print the Pearson correlation between base estimators
-
-    debug_mode: boolean, optional (default = False)
-        A boolean flag variable to set the verbose mode in printing debugging info via the "_print_debug" function
+    data: a dictionary, in which a key is a file name and a value is a document text (raw text.)
+        {
+            "SRI61X0602_full": "การศึกษาวิเคราะห์การทุจริตคอร์รัปชันของขบวนการเครือข่ายนายหน้าข้ามชาติในอุตสาหกรรมประมงต่อเนื่องของประเทศไทย",
+            "RDG6140010_full": "โครงการวิจัยและพัฒนาแนวทางการหนุนเสริมทางวิชาการเพื่อพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา",
+            ...
+        }
     """
     @staticmethod
     def read_file(files):
@@ -96,7 +66,7 @@ class Util:
         #         data_file_text.close()
         return data
 
-    #@staticmethod
+    # @staticmethod
     # def find_read_file(path):
     #
     #     # Find all files in a given input path and list absolute paths to them in the variable files
@@ -116,6 +86,24 @@ class Util:
     #     data = self.read_file(files)
     #     return data
 
+    """
+    A static method, filter_file_to_read(local_path, files), filters 'in' files in supported formats only (pdf, docx)
+    
+    Parameters
+    ----------
+    local_path: a local path that all files are storedt and located
+    
+    files: a list of files in a string format, required
+        
+    Returns
+    ----------
+    data: a dictionary, in which a key is a file name and a value is a document text (raw text.)
+        {
+            "SRI61X0602_full": "การศึกษาวิเคราะห์การทุจริตคอร์รัปชันของขบวนการเครือข่ายนายหน้าข้ามชาติในอุตสาหกรรมประมงต่อเนื่องของประเทศไทย",
+            "RDG6140010_full": "โครงการวิจัยและพัฒนาแนวทางการหนุนเสริมทางวิชาการเพื่อพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา",
+            ...
+        }
+    """
     @staticmethod
     def filter_file_to_read(local_path, files):
 
@@ -129,10 +117,23 @@ class Util:
                 print('-- To read file: \"{0}\". --'.format(file))
                 to_read_files.append(local_path + file)
             else:
-                print('-- Only pdf and docx formats are supported. This file will be ignored due to not support types: \"{0}\". --'.format(file))
+                print(
+                    '-- Only pdf and docx formats are supported. This file will be ignored due to not support types: \"{0}\". --'.format(
+                        file))
         data = Util.read_file(to_read_files)
         return data
 
+    """
+    A static method, path_leaf(path), returns a file name (leaf) from a given url
+    
+    Parameters
+    ----------
+    path: a path or url directing to a file 
+        
+    Returns
+    ----------
+    tail: a file name (leaf of path)
+    """
     @staticmethod
     def path_leaf(path):
         head, tail = ntpath.split(path)

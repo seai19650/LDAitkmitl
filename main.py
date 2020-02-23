@@ -64,14 +64,14 @@ abs_file_paths = []
 counter = 0
 print(len(urls), len(titles))
 for url in urls:
-    file_ = Util.path_leaf(url)
+    file = Util.path_leaf(url)
     # print(file_)
-    abs_file_path =  input_local_root + file_
+    abs_file_path =  input_local_root + file
     # print(abs_file_path)
 
     if not os.path.isfile(abs_file_path):
         try:
-            print('downloading file from this url: \"{0}\" with this file name : \"{1}\".'.format(url, file_))
+            print('downloading file from this url: \"{0}\" with this file name : \"{1}\".'.format(url, file))
             urllib.request.urlretrieve(url, abs_file_path)
         except:
             print('An exception occurred when downloading a file from this url, \"{0}\"'.format(url))
