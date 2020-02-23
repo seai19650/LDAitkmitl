@@ -9,8 +9,6 @@ import os
 import urllib.request
 
 
-
-
 """
     1) download all files from a list of URLs and save to local (API server)
     require:
@@ -58,6 +56,7 @@ titles = ['การศึกษาวิเคราะห์การทุจ
             # 'โครงการวิจัยและพัฒนาแนวทางการหนุนเสริมทางวิชาการเพื่อพัฒนากระบวนการผลิตและพัฒนาครูโดยบูรณาการแนวคิดจิตตปัญญาศึกษา ระบบพี่เลี้ยง และการวิจัยเป็นฐานของคณะครุศาสตร์ มหาวิทยาลัยราชภัฏ'
             ]
 
+max_no_topic = 7
 
 print('========== Beginning file download with urllib2. ==========')
 to_process_files = []
