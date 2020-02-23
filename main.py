@@ -17,18 +17,18 @@ import urllib.request
 # todo change these three variables
 # define a local root to save files
 
-# input_local_root = '/Users/Kim/Documents/trf_dir/TestDownloadFiles/'
-input_local_root = '/Users/dhanamon/LDAitkmitl/TestDownloadFiles/'
+input_local_root = '/Users/Kim/Documents/trf_dir/TestDownloadFiles/'
+# input_local_root = '/Users/dhanamon/LDAitkmitl/TestDownloadFiles/'
 
 # define an output directory to save an 'original' pyLDAvis html file
-# output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/'
-output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/'
+output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/'
+# output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/'
 # define an output directory to save an 'original' pyLDAvis html file
-pyLDAvis_output_file = 'docx_LDAvis_newmm_2n_postag_title_7n.html'
+pyLDAvis_output_file = 'docx_LDAvis_newmm_2n_postag_title_10n.html'
 
 # define an output directory to save an 'thai' pyLDAvis html file
-# th_output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/th/'
-th_output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/th/'
+th_output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/th/'
+# th_output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/th/'
 # define an output directory to save an 'thai' pyLDAvis html file
 th_pyLDAvis_output_file = 'th_docx_LDAvis_newmm_2n_postag_title_7n.html'
 
@@ -81,8 +81,8 @@ for url in urls:
             del titles[counter]
 
     else:
-        print('-- This file, \"{0}\", already exists in: \"{1}\"! Therefore, this file will not be downloaded. --'.format(file_, input_local_root))
-    to_process_files.append(file_)
+        print('-- This file, \"{0}\", already exists in: \"{1}\"! Therefore, this file will not be downloaded. --'.format(file, input_local_root))
+    to_process_files.append(file)
     counter += 1
 
 ldamodeling = LDAModeling()
