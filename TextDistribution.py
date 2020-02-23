@@ -2,7 +2,8 @@
 class TextDistribution:
 
     @staticmethod
-    def topicTerm_dist(topic_term_dist, term_dist_topic):
+    def topicTerm_dist(dic,corpus,topic_term_dist, term_dist_topic):
+        #lambda = 1.0
         term_dist_topic = dict(term_dist_topic)
         for x in term_dist_topic:
             term_list = []
@@ -33,8 +34,41 @@ class TextDistribution:
             topic_term = {"topic_id":x,
                         "terms":term_list}
             topic_term_dist.append(topic_term)
-        return topic_term_dist
+        
+        #lambda = 0.6
+        _lambda = 0.6
+        topic_term_dist_6 = []
+        for topic in topic_term_dist:
+            term_list = topic['terms']
+            new_term_list = []
+            for term in term_list:
+                term_name = term['term']
+                term_score = term['score']
+                term_id = dic['term_name']
+                prob_w = prob_word(corpus, term_id)
+                prob_w_t = term_score
+                new_term_score = (_lambda * prob_w_t) + ((1 - _lambda)*(prob_w_t/prob_w))
+                new_term = {"term":term_name,
+                        "score":new_term_score}
+                new_term_list.append(new_term)
+            topic_term = {"topic_id":topic['topic_id'],
+                        "terms":new_term_list}
+            topic_term_dist_6.append(topic_term)
+            
+        return topic_term_dist_6
 
+    @staticmethod
+    def prob_word(corpus, term_id):
+        corpus_list = []
+        for cp in corpus:
+            for word in cp:
+                corpus_list.append(word)
+        sum_ = sum(dict(corpus_list).values())
+        tfi = dict(corpus_list)[term_id]
+        # print(tfi, sum_)
+        prob_w = tfi/sum_
+        # print(prob_w)
+        return prob_w
     @staticmethod
     def document_dist(doc_id, title, text, id_ ,dictionary2,ldamodel,doc_topic_dist):
         bow = dictionary2.doc2bow(text)

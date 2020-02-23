@@ -145,10 +145,10 @@ class LDAModeling:
         soup.head.append(meta)
 
         souptemp = soup.prettify()
-        souptemp = souptemp.replace('https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js', 'd3.min.js')
-        souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.js', 'ldavis.v1.0.0.js')
+        souptemp = souptemp.replace('https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js', '/static/js/d3.min.js')
+        souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.js', '/static/js/ldavis.v1.0.0.js')
         souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.css',
-                                    'ldavis.v1.0.0.css')
+                                    '/static/css/ldavis.v1.0.0.css')
 
         with open(th_output_dir + th_pyLDAvis_file, "w") as outf:
             outf.write(souptemp)
@@ -216,25 +216,34 @@ class LDAModeling:
         # Generate LDA Model
 
         # Default number of topic is 10. If the number of documents is fewer than the maximum number of topics, the number of documents will be used to as the maximum number of topics.
-        max_no_topic = min([max_no_topic, num_doc])
+        max_no_topics = min([max_no_topics, num_doc])
+        if max_no_topics < 2:
+            max_no_topics = 2
 
         ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topic)
         term_dist_topic = ldamodel.show_topics(max_no_topic, 1000, log=True, formatted=False)
         print(term_dist_topic)
+        handle1=open('term_dist_topic','a+')
+        handle1.write(str(term_dist_topic))
+        handle1.write("\n")
+        handle1.close()
 
         print("========== PART 4 : Topic-term distribution ==========")
         ### Topic-Term Dist
         topic_term_dist = []
-        topic_term_dist = TextDistribution.topicTerm_dist(topic_term_dist, term_dist_topic)
+        topic_term_dist = TextDistribution.topicTerm_dist(dictionary2,corpus2,topic_term_dist, term_dist_topic)
         print(topic_term_dist)
-
+        handle1=open('topic_term_dist','a+')
+        handle1.write(str(topic_term_dist))
+        handle1.write("\n")
+        handle1.close()
         print("========== PART 4-1 : Document-topic (all) distribution ==========")
         ### Doc_topic_all_dist
         doc_topic_dist = []
         doc_topic_dist = TextDistribution.docTopic_dist(doc_topic_dist, data_df, num_doc, inp_list,dictionary2,ldamodel)
         print(doc_topic_dist)
 
-        print("========== PART 4-2 : Topic-term (min) distribution ==========")
+        print("========== PART 4-2 : Document-topic (min) distribution ==========")
         ### Doc_topic_min_dist
         n_doc_intopic = []
         n_doc_intopic = TextDistribution.Ndoc_topic(n_doc_intopic,num_doc, data_df, inp_list, dictionary2, ldamodel)
