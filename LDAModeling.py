@@ -216,13 +216,9 @@ class LDAModeling:
         # Generate LDA Model
 
         # Default number of topic is 10. If the number of documents is fewer than the maximum number of topics, the number of documents will be used to as the maximum number of topics.
-<<<<<<< HEAD
         max_no_topics = min([max_no_topics, num_doc])
         if max_no_topics < 2:
             max_no_topics = 2
-=======
-        max_no_topic = min([max_no_topic, num_doc])
->>>>>>> 0d68266a119c35e96fb45c7d4d5e2df953fee931
 
         ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topic)
         term_dist_topic = ldamodel.show_topics(max_no_topic, 1000, log=True, formatted=False)
