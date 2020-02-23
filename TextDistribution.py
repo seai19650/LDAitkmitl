@@ -41,13 +41,17 @@ class TextDistribution:
         for topic in topic_term_dist:
             term_list = topic['terms']
             new_term_list = []
+            # print(term_list)
             for term in term_list:
                 term_name = term['term']
                 term_score = term['score']
-                term_id = dic['term_name']
-                prob_w = prob_word(corpus, term_id)
-                prob_w_t = term_score
-                new_term_score = (_lambda * prob_w_t) + ((1 - _lambda)*(prob_w_t/prob_w))
+                if term_name in ['คิมม',"มนน","แซมม"]:
+                    new_term_score = term_score
+                else:
+                    term_id = dic[term_name]
+                    prob_w = TextDistribution.prob_word(corpus, term_id)
+                    prob_w_t = term_score
+                    new_term_score = (_lambda * prob_w_t) + ((1 - _lambda)*(prob_w_t/prob_w))
                 new_term = {"term":term_name,
                         "score":new_term_score}
                 new_term_list.append(new_term)
@@ -69,6 +73,7 @@ class TextDistribution:
         prob_w = tfi/sum_
         # print(prob_w)
         return prob_w
+
     @staticmethod
     def document_dist(doc_id, title, text, id_ ,dictionary2,ldamodel,doc_topic_dist):
         bow = dictionary2.doc2bow(text)

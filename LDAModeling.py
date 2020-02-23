@@ -145,10 +145,10 @@ class LDAModeling:
         soup.head.append(meta)
 
         souptemp = soup.prettify()
-        souptemp = souptemp.replace('https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js', '/static/js/d3.min.js')
-        souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.js', '/static/js/ldavis.v1.0.0.js')
+        souptemp = souptemp.replace('https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js', 'static/js/d3.min.js')
+        souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.js', 'static/js/ldavis.v1.0.0.js')
         souptemp = souptemp.replace('https://cdn.rawgit.com/bmabey/pyLDAvis/files/ldavis.v1.0.0.css',
-                                    '/static/css/ldavis.v1.0.0.css')
+                                    'static/css/ldavis.v1.0.0.css')
 
         with open(th_output_dir + th_pyLDAvis_file, "w") as outf:
             outf.write(souptemp)
@@ -163,7 +163,7 @@ class LDAModeling:
 
     def perform_topic_modeling(self, input_local_root, files, titles,
                                output_dir, pyLDAvis_output_file, th_output_dir, th_pyLDAvis_output_file,
-                               max_no_topic = 10, is_short_words_removed = True):
+                               max_no_topics = 10, is_short_words_removed = True):
 
         print("========== PART 1 : Input Files ==========")
         data = Util.filter_file_to_read(input_local_root, files)
@@ -220,9 +220,9 @@ class LDAModeling:
         if max_no_topics < 2:
             max_no_topics = 2
 
-        ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topic)
-        term_dist_topic = ldamodel.show_topics(max_no_topic, 1000, log=True, formatted=False)
-        print(term_dist_topic)
+        ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topics)
+        term_dist_topic = ldamodel.show_topics(max_no_topics, 1000, log=True, formatted=False)
+        # print(term_dist_topic)
         handle1=open('term_dist_topic','a+')
         handle1.write(str(term_dist_topic))
         handle1.write("\n")
@@ -231,7 +231,9 @@ class LDAModeling:
         print("========== PART 4 : Topic-term distribution ==========")
         ### Topic-Term Dist
         topic_term_dist = []
-        topic_term_dist = TextDistribution.topicTerm_dist(dictionary2,corpus2,topic_term_dist, term_dist_topic)
+        # print(dictionary2['ทุจริต'])
+        # print(dictionary2)
+        topic_term_dist = TextDistribution.topicTerm_dist(dict_2,corpus2,topic_term_dist, term_dist_topic)
         print(topic_term_dist)
         handle1=open('topic_term_dist','a+')
         handle1.write(str(topic_term_dist))
