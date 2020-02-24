@@ -42,34 +42,35 @@ class Util:
         }
     """
     @staticmethod
-    def read_file(files):
+    def read_file(local_path, files, converted_local_root):
         # create a dictionary, in which a key is a file name and a value is a document text (raw text.)
         data = {}
         # Read all given files in docx or readable pdf (readable means such a pdf file must be able to be read by pdfminer.)
         for file in files:
             data_file_text = ""
+            file_path = local_path + file
             try:
-                f_list = re.split("; |/|\\.", file)
-                if file.endswith('.pdf'):
-                    data_file_text = pdfReader.extract_pdf(file)
-                elif file.endswith('.docx'):
-                    data_file_text = docx2txt.process(file)
+                f_list = re.split("; |/|\\.", file_path)
+                if file_path.endswith('.pdf'):
+                    data_file_text = pdfReader.extract_pdf(file_path)
+                elif file_path.endswith('.docx'):
+                    data_file_text = docx2txt.process(file_path)
 
                 # Add document text in a dictionary
                 data[f_list[-2]] = [str(data_file_text)]
             except PDFSyntaxError as err:
-                print('=======This file, {0}, is unreadable======='.format(file))
+                print('=======This file, {0}, is unreadable======='.format(file_path))
                 print('Converting pdf by ghostscirpt')
-                mod_file = Util.path_dir(file) + '/mod-' + Util.path_leaf(file)
-                print(mod_file)
-                if not os.path.isfile(mod_file):
-                    call_with_args = "./ghostscript/convert_pdf2pdf_gs.sh '%s' '%s'" % (str(mod_file), str(file))
+                conv_file_path = converted_local_root + 'conv-' + Util.path_leaf(file_path)
+                print(conv_file_path)
+                if not os.path.isfile(conv_file_path):
+                    call_with_args = "./ghostscript/convert_pdf2pdf_gs.sh '%s' '%s'" % (str(conv_file_path), str(file_path))
                     os.system(call_with_args)
                 else:
-                    print("This mod file, {0}, already exists and has previously been converted by ghostscript. So, it will not be converted again.".format(mod_file))
+                    print("This mod file, {0}, already exists and has previously been converted by ghostscript. So, it will not be converted again.".format(conv_file_path))
 
                 try:
-                    data_file_text = pdfReader.extract_pdf(mod_file)
+                    data_file_text = pdfReader.extract_pdf(conv_file_path)
 
                     # Add document text in a dictionary
                     data[f_list[-2]] = [str(data_file_text)]
@@ -77,7 +78,7 @@ class Util:
                     print('Exception message: {0}'.format(inst))
             except:
                 print("=======ERROR cannot find the below file in a given path=======")
-                print(file, f_list)
+                print(file_path, f_list)
                 print('+++++++++++++++++++')
 
             # create rd_list for create training data
@@ -85,7 +86,7 @@ class Util:
         return data
 
     # @staticmethod
-    # def find_read_file(path):
+    # def find_read_file(path, converted_local_root):
     #
     #     # Find all files in a given input path and list absolute paths to them in the variable files
     #     files = []
@@ -101,7 +102,7 @@ class Util:
     #                 print(file)
     #                 files.append(os.path.join(r, file))
     #
-    #     data = self.read_file(files)
+    #     data = self.read_file(files, converted_local_root)
     #     return data
 
     """
@@ -123,22 +124,22 @@ class Util:
         }
     """
     @staticmethod
-    def filter_file_to_read(local_path, files):
+    def filter_file_to_read(local_path, files, converted_local_root):
 
         # Find all files in a given input path and list absolute paths to them in the variable files
         to_read_files = []
         for file in files:
             if file.endswith('.pdf'):
                 print('-- To read file: \"{0}\". --'.format(file))
-                to_read_files.append(local_path + file)
+                to_read_files.append(file)
             elif file.endswith('.docx'):
                 print('-- To read file: \"{0}\". --'.format(file))
-                to_read_files.append(local_path + file)
+                to_read_files.append(file)
             else:
                 print(
                     '-- Only pdf and docx formats are supported. This file will be ignored due to not support types: \"{0}\". --'.format(
                         file))
-        data = Util.read_file(to_read_files)
+        data = Util.read_file(local_path, to_read_files, converted_local_root)
         return data
 
     """

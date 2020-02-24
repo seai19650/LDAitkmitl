@@ -160,13 +160,12 @@ class LDAModeling:
         ldamodel = LdaModel(corpus, num_top, id2word=dictionary, decay=0.6, random_state=2, passes=10)
         return ldamodel
 
-
-    def perform_topic_modeling(self, input_local_root, files, titles,
+    def perform_topic_modeling(self, input_local_root, files, titles, converted_local_root,
                                output_dir, pyLDAvis_output_file, th_output_dir, th_pyLDAvis_output_file,
                                max_no_topic = 10, is_short_words_removed = True):
 
         print("========== PART 1 : Input Files ==========")
-        data = Util.filter_file_to_read(input_local_root, files)
+        data = Util.filter_file_to_read(input_local_root, files, converted_local_root)
         num_doc = len(titles)
 
         print("========== PART 2 : Data Preparation and Creating Word Tokenization ==========")
