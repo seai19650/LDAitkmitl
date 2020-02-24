@@ -163,7 +163,7 @@ class LDAModeling:
 
     def perform_topic_modeling(self, input_local_root, files, titles,
                                output_dir, pyLDAvis_output_file, th_output_dir, th_pyLDAvis_output_file,
-                               max_no_topics = 10, is_short_words_removed = True):
+                               max_no_topic = 10, is_short_words_removed = True):
 
         print("========== PART 1 : Input Files ==========")
         data = Util.filter_file_to_read(input_local_root, files)
@@ -216,12 +216,12 @@ class LDAModeling:
         # Generate LDA Model
 
         # Default number of topic is 10. If the number of documents is fewer than the maximum number of topics, the number of documents will be used to as the maximum number of topics.
-        max_no_topics = min([max_no_topics, num_doc])
-        if max_no_topics < 2:
-            max_no_topics = 2
+        max_no_topic = min([max_no_topic, num_doc])
+        if max_no_topic < 2:
+            max_no_topic = 2
 
-        ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topics)
-        term_dist_topic = ldamodel.show_topics(max_no_topics, 1000, log=True, formatted=False)
+        ldamodel = self.LDAmodel(dictionary2, corpus2, max_no_topic)
+        term_dist_topic = ldamodel.show_topics(max_no_topic, 1000, log=True, formatted=False)
         # print(term_dist_topic)
         handle1=open('term_dist_topic','a+')
         handle1.write(str(term_dist_topic))
