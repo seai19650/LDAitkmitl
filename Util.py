@@ -67,7 +67,7 @@ class Util:
                     call_with_args = "./ghostscript/convert_pdf2pdf_gs.sh '%s' '%s'" % (str(conv_file_path), str(file_path))
                     os.system(call_with_args)
                 else:
-                    print("This mod file, {0}, already exists and has previously been converted by ghostscript. So, it will not be converted again.".format(conv_file_path))
+                    print("This file, {0}, already exists and has previously been converted by ghostscript. So, it will not be converted again.".format(conv_file_path))
 
                 try:
                     data_file_text = pdfReader.extract_pdf(conv_file_path)

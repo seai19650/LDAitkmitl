@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4efb39f7-6bea-499d-a7f5-f2b935089f49" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/json_request.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LDAModeling.py" beforeDir="false" afterPath="$PROJECT_DIR$/LDAModeling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Util.py" beforeDir="false" afterPath="$PROJECT_DIR$/Util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/term_dist_topic" beforeDir="false" afterPath="$PROJECT_DIR$/term_dist_topic" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/topic_term_dist" beforeDir="false" afterPath="$PROJECT_DIR$/topic_term_dist" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,7 +13,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/LDAitkmitl$pdftest.coverage" NAME="pdftest Coverage Results" MODIFIED="1575193903155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/LDAitkmitl$main.coverage" NAME="main Coverage Results" MODIFIED="1582564828115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/LDAitkmitl$main.coverage" NAME="main Coverage Results" MODIFIED="1582565008635" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LDAitkmitl$pytest_in_test_downloadfile_py.coverage" NAME="pytest in test_downloadfile.py Coverage Results" MODIFIED="1582285642550" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LDAitkmitl$test_downloadfile.coverage" NAME="test_downloadfile Coverage Results" MODIFIED="1582285752346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/LDAitkmitl$pdfReader.coverage" NAME="pdfReader Coverage Results" MODIFIED="1575193427961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PDFreader" />
@@ -49,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="135" selection-start-line="135" selection-start-column="2" selection-end-line="136" selection-end-column="18" />
+            <state relative-caret-position="459">
+              <caret line="135" column="88" selection-start-line="135" selection-start-column="88" selection-end-line="135" selection-end-column="88" />
             </state>
           </provider>
         </entry>
@@ -58,8 +53,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LDAModeling.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="267" column="112" selection-start-line="162" selection-start-column="4" selection-end-line="267" selection-end-column="112" />
+            <state relative-caret-position="291">
+              <caret line="253" column="18" lean-forward="true" selection-start-line="253" selection-start-column="18" selection-end-line="253" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -67,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Util.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-477">
-              <caret line="80" column="31" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
+            <state relative-caret-position="219">
+              <caret line="69" column="31" selection-start-line="69" selection-start-column="31" selection-end-line="69" selection-end-column="31" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -121,9 +116,9 @@
         <option value="$PROJECT_DIR$/similarity.py" />
         <option value="$PROJECT_DIR$/LDAModeling0.9.py" />
         <option value="$PROJECT_DIR$/LDAModelingV0_9.py" />
-        <option value="$PROJECT_DIR$/Util.py" />
         <option value="$PROJECT_DIR$/json_request.json" />
         <option value="$PROJECT_DIR$/LDAModeling.py" />
+        <option value="$PROJECT_DIR$/Util.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -322,7 +317,7 @@
       <workItem from="1580023058506" duration="47000" />
       <workItem from="1580023109993" duration="7515000" />
       <workItem from="1581925803241" duration="303000" />
-      <workItem from="1582000870833" duration="60856000" />
+      <workItem from="1582000870833" duration="61178000" />
     </task>
     <servers />
   </component>
@@ -359,7 +354,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73694000" />
+    <option name="totallyTimeSpent" value="74016000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
@@ -525,16 +520,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-477">
-          <caret line="80" column="31" selection-start-line="80" selection-start-column="31" selection-end-line="80" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/json_request.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -542,17 +527,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="69" column="31" selection-start-line="69" selection-start-column="31" selection-end-line="69" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/LDAModeling.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="267" column="112" selection-start-line="162" selection-start-column="4" selection-end-line="267" selection-end-column="112" />
+        <state relative-caret-position="291">
+          <caret line="253" column="18" lean-forward="true" selection-start-line="253" selection-start-column="18" selection-end-line="253" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="135" selection-start-line="135" selection-start-column="2" selection-end-line="136" selection-end-column="18" />
+        <state relative-caret-position="459">
+          <caret line="135" column="88" selection-start-line="135" selection-start-column="88" selection-end-line="135" selection-end-column="88" />
         </state>
       </provider>
     </entry>

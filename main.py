@@ -28,13 +28,13 @@ converted_local_root = '/Users/Kim/Documents/trf_dir/TestDownloadFiles/converted
 output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/'
 # output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/'
 # define an output directory to save an 'original' pyLDAvis html file
-pyLDAvis_output_file = '4pdf_LDAvis_newmm_2n_postag_title_10n.html'
+pyLDAvis_output_file = '5pdf_LDAvis_newmm_2n_postag_title_10n.html'
 
 # define an output directory to save an 'thai' pyLDAvis html file
 th_output_dir = '/Users/Kim/Documents/trf_dir/PyLDAVizOutput/th/'
 # th_output_dir = '/Users/dhanamon/LDAitkmitl/PyLDAVizOutput/th/'
 # define an output directory to save an 'thai' pyLDAvis html file
-th_pyLDAvis_output_file = 'th_4pdf_LDAvis_newmm_2n_postag_title_10n.html'
+th_pyLDAvis_output_file = 'th_5pdf_LDAvis_newmm_2n_postag_title_10n.html'
 
 urls = [
         # 'https://elibrary.trf.or.th/fullP/SRI61X0602/SRI61X0602_full.pdf',
@@ -87,10 +87,6 @@ titles = [
             ]
 
 
-# nested_dict = { 'dict1': {
-#                       'key_A': 'value_A'},
-#                 'dict2': {'key_B': 'value_B'}}
-
 with open('json_request.json', 'r') as f:
     request_dict = json.load(f)
 
@@ -137,7 +133,7 @@ for doc_id, document in documents.items():
 # print(documents)
 
 ldamodeling = LDAModeling()
-ldamodeling.perform_topic_modeling(input_local_root, to_process_files, titles, converted_local_root,
+ldamodeling.perform_topic_modeling(input_local_root, to_process_files, to_process_titles, converted_local_root,
                                    output_dir, pyLDAvis_output_file, th_output_dir, th_pyLDAvis_output_file,
                                    max_no_topic)
 
